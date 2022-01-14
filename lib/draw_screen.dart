@@ -9,6 +9,8 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 class Draw extends StatefulWidget {
+  const Draw({Key? key}) : super(key: key);
+
   @override
   _DrawState createState() => _DrawState();
 }
@@ -81,7 +83,7 @@ class _DrawState extends State<Draw> {
                       IconButton(
                           icon: const Icon(Icons.save),
                           onPressed: () {
-                            _save(context).then((result) => log('=========SaveResult> $result'));
+                            _save(context).then((result) => log('════════════════════════════════SaveResult> $result'));
                           }),
                       IconButton(
                           icon: const Icon(Icons.clear),
@@ -125,10 +127,9 @@ class _DrawState extends State<Draw> {
       body: GestureDetector(
         onPanUpdate: (details) {
           setState(() {
-            log('======onPanUpdate>');
-              // RenderBox renderBox = context.findRenderObject() as RenderBox;
+              RenderBox renderBox = context.findRenderObject() as RenderBox;
               points.add(DrawingPoints(
-                  points: /*renderBox.globalToLocal(*/details.globalPosition/*)*/,
+                  points: renderBox.globalToLocal(details.globalPosition),
                   paint: Paint()
                     ..strokeCap = strokeCap
                     ..isAntiAlias = true
@@ -140,11 +141,6 @@ class _DrawState extends State<Draw> {
         onPanStart: (details) {
           setState(() {
             // RenderBox renderBox = context.findRenderObject() as RenderBox;
-            log('======onPanStart>');
-            // isFirstTap=true;
-            // log('======G> ${details.globalPosition}');
-            // log('======GTL> ${renderBox.globalToLocal(details.localPosition)}');
-            // log('======LTG> ${renderBox.localToGlobal(details.globalPosition)}');
             // points.add(DrawingPoints(
             //     points: renderBox.globalToLocal(details.localPosition),
             //     paint: Paint()
@@ -187,13 +183,13 @@ class _DrawState extends State<Draw> {
                   onColorChanged: (color) {
                     pickerColor = color;
                   },
-                  showLabel: true,
+                  // showLabel: true,
                   // labelTypes: const [ColorLabelType.hex],
                   pickerAreaHeightPercent: 0.8,
                 ),
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: const Text('Save'),
                   onPressed: () {
                     setState(() => selectedColor = pickerColor);
@@ -264,20 +260,21 @@ class _DrawState extends State<Draw> {
 }
 
 class DrawingPainter extends CustomPainter {
+
   DrawingPainter({required this.pointsList});
+
   List<DrawingPoints?> pointsList;
   List<Offset> offsetPoints = [];
+
   @override
   void paint(Canvas canvas, Size size) {
     for (int i = 0; i < pointsList.length - 1; i++) {
       if (pointsList[i] != null && pointsList[i + 1] != null) {
-        canvas.drawLine(pointsList[i]!.points, pointsList[i + 1]!.points,
-            pointsList[i]!.paint);
+        canvas.drawLine(pointsList[i]!.points, pointsList[i + 1]!.points, pointsList[i]!.paint);
       } else if (pointsList[i] != null && pointsList[i + 1] == null) {
         offsetPoints.clear();
         offsetPoints.add(pointsList[i]!.points);
-        offsetPoints.add(Offset(
-            pointsList[i]!.points.dx + 0.1, pointsList[i]!.points.dy + 0.1));
+        offsetPoints.add(Offset(pointsList[i]!.points.dx + 0.1, pointsList[i]!.points.dy + 0.1));
         canvas.drawPoints(ui.PointMode.points, offsetPoints, pointsList[i]!.paint);
       }
     }

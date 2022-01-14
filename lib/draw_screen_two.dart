@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -39,18 +40,20 @@ class _CanvasPaintingState extends State<CanvasPainting> {
             //Creates three buttons to pick stroke value.
             actions: <Widget>[
               //Resetting to default stroke value
-              FlatButton(
-                child: Icon(
+              TextButton(
+                child: const Icon(
                   Icons.clear,
+                  color: Colors.black,
                 ),
                 onPressed: () {
                   strokeWidth = 3.0;
                   Navigator.of(context).pop();
                 },
               ),
-              FlatButton(
-                child: Icon(
+              TextButton(
+                child: const Icon(
                   Icons.brush,
+                  color: Colors.black,
                   size: 24,
                 ),
                 onPressed: () {
@@ -58,9 +61,10 @@ class _CanvasPaintingState extends State<CanvasPainting> {
                   Navigator.of(context).pop();
                 },
               ),
-              FlatButton(
-                child: Icon(
+              TextButton(
+                child: const Icon(
                   Icons.brush,
+                  color: Colors.black,
                   size: 40,
                 ),
                 onPressed: () {
@@ -68,9 +72,10 @@ class _CanvasPaintingState extends State<CanvasPainting> {
                   Navigator.of(context).pop();
                 },
               ),
-              FlatButton(
-                child: Icon(
+              TextButton(
+                child: const Icon(
                   Icons.brush,
+                  color: Colors.black,
                   size: 60,
                 ),
                 onPressed: () {
@@ -99,9 +104,10 @@ class _CanvasPaintingState extends State<CanvasPainting> {
           child: AlertDialog(
             //Creates three buttons to pick opacity value.
             actions: <Widget>[
-              FlatButton(
-                child: Icon(
+              TextButton(
+                child: const Icon(
                   Icons.opacity,
+                  color: Colors.black,
                   size: 24,
                 ),
                 onPressed: () {
@@ -110,9 +116,10 @@ class _CanvasPaintingState extends State<CanvasPainting> {
                   Navigator.of(context).pop();
                 },
               ),
-              FlatButton(
-                child: Icon(
+              TextButton(
+                child: const Icon(
                   Icons.opacity,
+                  color: Colors.black,
                   size: 40,
                 ),
                 onPressed: () {
@@ -120,9 +127,10 @@ class _CanvasPaintingState extends State<CanvasPainting> {
                   Navigator.of(context).pop();
                 },
               ),
-              FlatButton(
-                child: Icon(
+              TextButton(
+                child: const Icon(
                   Icons.opacity,
+                  color: Colors.black,
                   size: 60,
                 ),
                 onPressed: () {
@@ -163,18 +171,19 @@ class _CanvasPaintingState extends State<CanvasPainting> {
     return <Widget>[
       FloatingActionButton(
         heroTag: "paint_save",
-        child: Icon(Icons.save),
+        child: const Icon(Icons.save),
         tooltip: 'Save',
         onPressed: () {
+          log('=========SavePressed>');
           //min: 0, max: 50
           setState(() {
-            _save(context);
+            _save(context).then((result) => log('=========SaveResult> $result'));
           });
         },
       ),
       FloatingActionButton(
         heroTag: "paint_stroke",
-        child: Icon(Icons.brush),
+        child: const Icon(Icons.brush),
         tooltip: 'Stroke',
         onPressed: () {
           //min: 0, max: 50
@@ -185,7 +194,7 @@ class _CanvasPaintingState extends State<CanvasPainting> {
       ),
       FloatingActionButton(
         heroTag: "paint_opacity",
-        child: Icon(Icons.opacity),
+        child: const Icon(Icons.opacity),
         tooltip: 'Opacity',
         onPressed: () {
           //min:0, max:1
@@ -196,7 +205,7 @@ class _CanvasPaintingState extends State<CanvasPainting> {
       ),
       FloatingActionButton(
           heroTag: "erase",
-          child: Icon(Icons.clear),
+          child: const Icon(Icons.clear),
           tooltip: "Erase",
           onPressed: () {
             setState(() {
@@ -287,18 +296,11 @@ class _CanvasPaintingState extends State<CanvasPainting> {
           },
           child: RepaintBoundary(
             key: globalKey,
-            child: Stack(
-              children: <Widget>[
-                Center(
-                  child: Image.asset("assets/images/hut.png"),
-                ),
-                CustomPaint(
-                  size: Size.infinite,
-                  painter: MyPainter(
-                    pointsList: points,
-                  ),
-                ),
-              ],
+            child: CustomPaint(
+              size: Size.infinite,
+              painter: MyPainter(
+                pointsList: points,
+              ),
             ),
           ),
         ),
@@ -332,6 +334,7 @@ class _CanvasPaintingState extends State<CanvasPainting> {
 }
 
 class MyPainter extends CustomPainter {
+
   MyPainter({required this.pointsList});
 
   //Keep track of the points tapped on the screen

@@ -18,7 +18,7 @@ class AnimatedFloatingActionButton extends StatefulWidget {
   /// The [durationAnimation], [colorStartAnimation], [colorEndAnimation],
   /// [curve] and [spaceBetween] default to the value given by the library
   /// but also the should not be null.
-  AnimatedFloatingActionButton({
+  const AnimatedFloatingActionButton({
     Key? key,
     required this.fabButtons,
     required this.animatedIconData,
@@ -58,7 +58,7 @@ class AnimatedFloatingActionButtonState
   late Animation<Color?> _buttonColor;
   late Animation<double> _animateIcon;
   late Animation<double> _translateButton;
-  double _fabHeight = 56.0;
+  final double _fabHeight = 56.0;
   bool _isOpened = false;
 
   bool get isOpened => _isOpened;
@@ -93,7 +93,7 @@ class AnimatedFloatingActionButtonState
     ).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: Interval(
+        curve: const Interval(
           0.00,
           1.00,
           curve: Curves.linear,
